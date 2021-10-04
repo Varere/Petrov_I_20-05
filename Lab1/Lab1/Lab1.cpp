@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -122,25 +123,25 @@ int main() {
             cin >> tempaction;
             if (tempaction == 1) {
                 cout << "Введите новый id" << endl;
-                cin >> pipes[tempid + 1].id;
+                cin >> pipes[tempid - 1].id;
             } else if (tempaction == 2){
                 cout << "Введите новую длину" << endl;
-                cin >> pipes[tempid + 1].length;
+                cin >> pipes[tempid - 1].length;
             } else if (tempaction == 3){
                 cout << "Введите новый диаметр" << endl;
-                cin >> pipes[tempid + 1].caliber;
+                cin >> pipes[tempid - 1].caliber;
             } else if (tempaction == 4) {
                 cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
-                cin >> pipes[tempid + 1].overhaul;
+                cin >> pipes[tempid - 1].overhaul;
             } else if (tempaction == 5){
                 cout << "Введите новый id" << endl;
-                cin >> pipes[tempid + 1].id;
+                cin >> pipes[tempid - 1].id;
                 cout << "Введите новую длину" << endl;
-                cin >> pipes[tempid + 1].length;
+                cin >> pipes[tempid - 1].length;
                 cout << "Введите новый диаметр" << endl;
-                cin >> pipes[tempid + 1].caliber;
+                cin >> pipes[tempid - 1].caliber;
                 cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
-                cin >> pipes[tempid + 1].overhaul;
+                cin >> pipes[tempid - 1].overhaul;
             } else {
                 cout << "Некорректный ввод" << endl;
             }
@@ -155,7 +156,7 @@ int main() {
             }
             cin >> tempid;
             cout << "Нынешние данные ";
-            printks(kses[tempid + 1]);
+            printks(kses[tempid - 1]);
             cout << endl;
             cout << "Что вы хотите отредактировать: " << endl;
             cout << "1. id " << endl;
@@ -167,33 +168,58 @@ int main() {
             cin >> tempaction;
             if (tempaction == 1) {
                 cout << "Введите новый id" << endl;
-                cin >> kses[tempid + 1].id;
+                cin >> kses[tempid - 1].id;
             } else if (tempaction == 2) {
                 cout << "Введите новое название" << endl;
-                cin >> kses[tempid + 1].name;
+                cin >> kses[tempid - 1].name;
             } else if (tempaction == 3) {
                 cout << "Введите количество цехов" << endl;
-                cin >> kses[tempid + 1].sections;
+                cin >> kses[tempid - 1].sections;
             } else if (tempaction == 4) {
                 cout << "Введите количество цехов в работе" << endl;
-                cin >> kses[tempid + 1].wsections;
+                cin >> kses[tempid - 1].wsections;
             } else if (tempaction == 5) {
                 cout << "Введите эффективность" << endl;
-                cin >> kses[tempid + 1].efficiency;
+                cin >> kses[tempid - 1].efficiency;
             } else if (tempaction == 6) {
                 cout << "Введите новый id" << endl;
-                cin >> kses[tempid + 1].id;
+                cin >> kses[tempid - 1].id;
                 cout << "Введите новое название" << endl;
-                cin >> kses[tempid + 1].name;
+                cin >> kses[tempid - 1].name;
                 cout << "Введите количество цехов" << endl;
-                cin >> kses[tempid + 1].sections;
+                cin >> kses[tempid - 1].sections;
                 cout << "Введите количество цехов в работе" << endl;
-                cin >> kses[tempid + 1].wsections;
+                cin >> kses[tempid - 1].wsections;
                 cout << "Введите эффективность" << endl;
-                cin >> kses[tempid + 1].efficiency;
+                cin >> kses[tempid - 1].efficiency;
             } else {
                 cout << "Некорректный ввод" << endl;
             }
+        } else if (action == 6) {
+            ofstream out("output");
+            out << "Трубы: " << endl;
+            for (int i = 0; i < pipes.size(); ++i) {
+                out << "Id: " << pipes[i].id << " ";
+                out << "Длина: " << pipes[i].length << " ";
+                out << "Диаметр: " << pipes[i].caliber << " ";
+                if (pipes[i].overhaul == true) {
+                    out << "Состояние: В ремонте";
+                }
+                else {
+                    out << "Состояние: Исправна";
+                }
+            }
+            out << endl;
+            out << "КС: " << endl;
+            for (int i = 0; i < kses.size(); ++i) {
+                out << "Id: " << kses[i].id << " ";
+                out << "Название: " << kses[i].name << " ";
+                out << "Количество цехов: " << kses[i].sections << " ";
+                out << "Цехов работает: " << kses[i].wsections << " ";
+                out << "Эффективность: " << kses[i].efficiency << " ";
+            }
+            out << endl;
+            out.close();
         }
     }
 }
