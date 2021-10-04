@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -16,7 +18,7 @@ struct KS {
     string name;
     int sections; // number of sections
     int wsections; //working sections
-    double efficiency;
+    int efficiency;
 };
 
 void printks(KS ks) {
@@ -41,7 +43,7 @@ void printpipe(Pipe pipe) {
 
 int main() {
     vector<Pipe> pipes;
-    vector<KS> kses; //plural from KS i guess
+    vector<KS> kses; //plural from KS I guess
     int action;
     setlocale(LC_ALL, "Russian");
     while (1) {
@@ -78,7 +80,7 @@ int main() {
             string tempname;
             int tempsections; 
             int tempwsections; 
-            double tempefficiency;
+            int tempefficiency;
             cout << "Введите id КС" << endl;
             cin >> tempid;
             cout << "Введите название КС" << endl;
@@ -220,6 +222,88 @@ int main() {
             }
             out << endl;
             out.close();
+        } else if (action == 7) {
+            ifstream input("output");
+            string main;
+            int typechange = 0;
+            while (getline(cin, main)) {
+                if (main.size() < 10) {
+                    typechange++;
+                }
+                if (typechange > 1) {
+                    for (int i = 0; i < main.size(); ++i) {
+                        string temp;
+                        int tempid;
+                        string tempname;
+                        int tempsections;
+                        int tempwsections;
+                        int tempefficiency;
+                        int typecount = 0;
+                        if (main[i] == 32) {
+                            typecount++;
+                            for(int j = i + 1;; ++j){
+                                if (main[j] == 32) {
+                                    i = j + 1;
+                                    break;
+                                }
+                                temp += main.at(j);
+                            }
+                            if (typecount == 1) {
+                                tempid = stoi(temp);
+                            } else if (typecount == 2) {
+                                tempname = temp;
+                            } else if (typecount == 3) {
+                                tempsections = stoi(temp);
+                            } else if (typecount == 4) {
+                                tempwsections = stoi(temp);
+                            } else if (typecount == 5){
+                                tempefficiency = stoi(temp);
+                            }
+                            temp.clear();
+                        }
+                        KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
+                        kses.push_back(newks);
+                    }
+                } else {
+                    for (int i = 0; i < main.size(); ++i) {
+                        string temp;
+                        int tempid;
+                        int templength;
+                        int tempcaliber;
+                        bool tempoverhaul;
+                        int typecount = 0;
+                        if (main[i] == 32) {
+                            typecount++;
+                            for (int j = i + 1;; ++j) {
+                                if (main[j] == 32) {
+                                    i = j + 1;
+                                    break;
+                                }
+                                temp += main.at(j);
+                            }
+                            if (typecount == 1) {
+                                tempid = stoi(temp);
+                            }
+                            else if (typecount == 2) {
+                                templength = stoi(temp);
+                            }
+                            else if (typecount == 3) {
+                                tempcaliber = stoi(temp);
+                            }
+                            else if (typecount == 4) {
+                                if (temp[-8] == 32) {
+                                    tempoverhaul = 1;
+                                } else {
+                                    tempoverhaul = 0;
+                                }
+                            }
+                            temp.clear();
+                        }
+                        Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
+                        pipes.push_back(newpipe);
+                    }
+                }
+            }
         }
     }
 }
