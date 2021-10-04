@@ -3,16 +3,14 @@
 
 using namespace std;
 
-struct Pipe
-{
+struct Pipe {
     int id;
     int length;
     int caliber;
     bool overhaul;
 };
 
-struct KS
-{
+struct KS {
     int id;
     string name;
     int sections; // number of sections
@@ -20,8 +18,27 @@ struct KS
     double efficiency;
 };
 
-int main()
-{
+void printks(KS ks) {
+    cout << "Id: " << ks.id << " ";
+    cout << "Название: " << ks.name << " ";
+    cout << "Количество цехов: " << ks.sections << " ";
+    cout << "Цехов работает: " << ks.wsections << " ";
+    cout << "Эффективность: " << ks.efficiency << " ";
+}
+
+void printpipe(Pipe pipe) {
+    cout << "Id: " << pipe.id << " ";
+    cout << "Длина: " << pipe.length << " ";
+    cout << "Диаметр: " << pipe.caliber << " ";
+    if (pipe.overhaul == true) {
+        cout << "Состояние: В ремонте";
+    } else {
+        cout << "Состояние: Исправна";
+    }
+}
+
+
+int main() {
     vector<Pipe> pipes;
     vector<KS> kses; //
     int action;
