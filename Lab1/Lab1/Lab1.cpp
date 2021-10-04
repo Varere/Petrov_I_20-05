@@ -3,6 +3,25 @@
 
 #include <iostream>
 
+using namespace std;
+
+struct Pipe
+{
+    int id;
+    int length;
+    int caliber;
+    bool overhaul;
+};
+
+struct KS
+{
+    int id;
+    string name;
+    int sections; // number of sections
+    int wsections; //working sections
+    double efficiency;
+};
+
 int main()
 {
     std::cout << "Hello World!\n";
