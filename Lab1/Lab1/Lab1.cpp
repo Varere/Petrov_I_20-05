@@ -40,7 +40,7 @@ void printpipe(Pipe pipe) {
 
 int main() {
     vector<Pipe> pipes;
-    vector<KS> kses; //
+    vector<KS> kses; //plural from KS i guess
     int action;
     setlocale(LC_ALL, "Russian");
     while (1) {
@@ -68,7 +68,7 @@ int main() {
             cin >> templength;
             cout << "Введите диаметр трубы" << endl;
             cin >> tempcaliber;
-            cout << "Труба сейчас в ремонте? (1:да; 2:нет)" << endl;
+            cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;//error add correction check
             cin >> tempoverhaul;
             Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
             pipes.push_back(newpipe);
@@ -100,7 +100,48 @@ int main() {
             for (int i = 0; i < kses.size(); ++i) {
                 printks(kses[i]);
             }
-
+            cout << endl;
+        } else if(action == 4) {
+            int tempid;
+            int tempaction;
+            
+            cout << "Выберите трубу которую хотите отредактировать" << endl;
+            for (int i = 0; i < pipes.size(); ++i) {
+                cout << i + 1 << " " << pipes[i].id << endl;
+            }
+            cin >> tempid;
+            cout << "Нынешние данные ";
+            printpipe(pipes[tempid + 1]);
+            cout << endl;
+            cout << "Что вы хотите отредактировать: " << endl;
+            cout << "1. id " << endl;
+            cout << "2. Длина " << endl;
+            cout << "3. Диаметр " << endl;
+            cout << "4. Состояние " << endl;
+            cout << "5. Все " << endl;
+            cin >> tempaction;
+            if (tempaction == 1) {
+                cout << "Введите новый id" << endl;
+                cin >> pipes[tempid + 1].id;
+            } else if (tempaction == 2){
+                cout << "Введите новую длину" << endl;
+                cin >> pipes[tempid + 1].length;
+            } else if (tempaction == 3){
+                cout << "Введите новый диаметр" << endl;
+                cin >> pipes[tempid + 1].caliber;
+            } else if (tempaction == 4) {
+                cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
+                cin >> pipes[tempid + 1].overhaul;
+            } else if (tempaction == 5){
+                cout << "Введите новый id" << endl;
+                cin >> pipes[tempid + 1].id;
+                cout << "Введите новую длину" << endl;
+                cin >> pipes[tempid + 1].length;
+                cout << "Введите новый диаметр" << endl;
+                cin >> pipes[tempid + 1].caliber;
+                cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
+                cin >> pipes[tempid + 1].overhaul;
+            }
         }
     }
 }
