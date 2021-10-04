@@ -141,6 +141,58 @@ int main() {
                 cin >> pipes[tempid + 1].caliber;
                 cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
                 cin >> pipes[tempid + 1].overhaul;
+            } else {
+                cout << "Некорректный ввод" << endl;
+            }
+
+        } else if (action == 5) {
+            int tempid;
+            int tempaction;
+
+            cout << "Выберите КС который хотите отредактировать" << endl;
+            for (int i = 0; i < kses.size(); ++i) {
+                cout << i + 1 << " " << kses[i].id << endl;
+            }
+            cin >> tempid;
+            cout << "Нынешние данные ";
+            printks(kses[tempid + 1]);
+            cout << endl;
+            cout << "Что вы хотите отредактировать: " << endl;
+            cout << "1. id " << endl;
+            cout << "2. Название " << endl;
+            cout << "3. Количество цехов " << endl;
+            cout << "4. Количество цехов в работе " << endl;
+            cout << "5. Эффективность " << endl;
+            cout << "6. Все " << endl;
+            cin >> tempaction;
+            if (tempaction == 1) {
+                cout << "Введите новый id" << endl;
+                cin >> kses[tempid + 1].id;
+            } else if (tempaction == 2) {
+                cout << "Введите новое название" << endl;
+                cin >> kses[tempid + 1].name;
+            } else if (tempaction == 3) {
+                cout << "Введите количество цехов" << endl;
+                cin >> kses[tempid + 1].sections;
+            } else if (tempaction == 4) {
+                cout << "Введите количество цехов в работе" << endl;
+                cin >> kses[tempid + 1].wsections;
+            } else if (tempaction == 5) {
+                cout << "Введите эффективность" << endl;
+                cin >> kses[tempid + 1].efficiency;
+            } else if (tempaction == 6) {
+                cout << "Введите новый id" << endl;
+                cin >> kses[tempid + 1].id;
+                cout << "Введите новое название" << endl;
+                cin >> kses[tempid + 1].name;
+                cout << "Введите количество цехов" << endl;
+                cin >> kses[tempid + 1].sections;
+                cout << "Введите количество цехов в работе" << endl;
+                cin >> kses[tempid + 1].wsections;
+                cout << "Введите эффективность" << endl;
+                cin >> kses[tempid + 1].efficiency;
+            } else {
+                cout << "Некорректный ввод" << endl;
             }
         }
     }
