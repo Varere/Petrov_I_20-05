@@ -72,7 +72,7 @@ int main() {
             cin >> tempoverhaul;
             Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
             pipes.push_back(newpipe);
-        } else if (action == 2){
+        } else if (action == 2) {
             int tempid;
             string tempname;
             int tempsections; 
@@ -90,6 +90,17 @@ int main() {
             cin >> tempefficiency;
             KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
             kses.push_back(newks);
+        } else if (action == 3) {
+            cout << "Трубы: " << endl;
+            for (int i = 0; i < pipes.size(); ++i) {
+                printpipe(pipes[i]);
+            }
+            cout << endl;
+            cout << "КС: " << endl;
+            for (int i = 0; i < kses.size(); ++i) {
+                printks(kses[i]);
+            }
+
         }
     }
 }
