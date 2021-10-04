@@ -23,6 +23,7 @@ struct KS
 int main()
 {
     vector<Pipe> pipes;
+    vector<KS> kses; //
     int action;
     setlocale(LC_ALL, "Russian");
     while (1) {
@@ -54,6 +55,24 @@ int main()
             cin >> tempoverhaul;
             Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
             pipes.push_back(newpipe);
+        } else if (action == 2){
+            int tempid;
+            string tempname;
+            int tempsections; 
+            int tempwsections; 
+            double tempefficiency;
+            cout << "Введите id КС" << endl;
+            cin >> tempid;
+            cout << "Введите название КС" << endl;
+            cin >> tempname;
+            cout << "Введите количество цехов в КС" << endl;
+            cin >> tempsections;
+            cout << "Введите количнство работающих цехов в КС" << endl;
+            cin >> tempwsections;
+            cout << "Введите эффективность КС" << endl;
+            cin >> tempefficiency;
+            KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
+            kses.push_back(newks);
         }
     }
 }
