@@ -30,38 +30,70 @@ void printks(KS ks) {
     cout << "Эффективность: " << ks.efficiency << " ";
 }
 
-/*int corcheck() {
-    string n;
-    bool flag = 0;
-    int num = 0;
-    cin >> n;
-    if (cin.peek() != '\n') {
-        cin.clear();
-        cin.ignore(10000000, '\n');
-        flag = 1;
-        cout << "Некорректный ввод. Попробуйте снова" << endl;
-    }
-    for (int i = 0; i < n.size(); ++i) {
-        if (isdigit(n[i])) {
-            int a = n[i];
-            num = num * 10 + (a - 48);
-        } else {
-            flag = 1;
-            cout << "Некорректный ввод. Попробуйте снова" << endl;
-            break;
+void save_to_file(vector<Pipe>& pipes, vector<KS>& kses) {
+    ofstream out("output");
+    out << pipes.size() << endl;
+    for (int i = 0; i < pipes.size(); ++i) {
+        out << pipes[i].id << endl;
+        out << pipes[i].length << endl;
+        out << pipes[i].caliber << endl;
+        if (pipes[i].overhaul == true) {
+            out << 1 << endl;
+        }
+        else {
+            out << 0 << endl;
         }
     }
-    if (flag) {
-        return corcheck();
-    } else{
-        return num;
+    out << kses.size() << endl;
+    for (int i = 0; i < kses.size(); ++i) {
+        out << kses[i].id << endl;
+        out << kses[i].name << endl;
+        out << kses[i].sections << endl;
+        out << kses[i].wsections << endl;
+        out << kses[i].efficiency << endl;
     }
-    
-}*/
+    out.close();
+}
+
+void file_upload(vector<Pipe>& pipes, vector<KS>& kses) {
+    ifstream input("output");
+    int counter;
+    string main;
+    int tempid;
+    int templength;
+    int tempcaliber;
+    bool tempoverhaul;
+    string tempname;
+    int tempsections;
+    int tempwsections;
+    int tempefficiency;
+    input >> counter;
+    for (int i = 0; i < counter; ++i) {
+        input >> tempid;
+        input >> templength;
+        input >> tempcaliber;
+        input >> tempoverhaul;
+        Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
+        pipes.push_back(newpipe);
+
+    }
+
+    input >> counter;
+
+    for (int i = 0; i < counter; ++i) {
+        input >> tempid;
+        getline(cin, main);
+        tempname = main;
+        input >> tempsections;
+        input >> tempwsections;
+        input >> tempefficiency;
+        KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
+        kses.push_back(newks);
+    }
+}
 
 int intcorcheck(int min, int max) {
     int n;
-    //string space = " ";
     bool flag = 0;
     cin >> n;
     if (cin.peek() != '\n' || cin.fail() || n < min || n > max) {
@@ -81,7 +113,6 @@ int intcorcheck(int min, int max) {
 
 double doublecorcheck(double min, double max) {
     double n;
-    //string space = " ";
     bool flag = 0;
     cin >> n;
     if (cin.peek() != '\n' || cin.fail() || n < min || n > max) {
@@ -110,10 +141,178 @@ void printpipe(Pipe pipe) {
     }
 }
 
+void changeKS(vector<KS>& kses) {
+    int tempid;
+    int tempaction;
+    cout << "Выберите КС который хотите отредактировать" << endl;
+    for (int i = 0; i < kses.size(); ++i) {//!!!!!!!!!!!!!!!!!!!!!
+        cout << i + 1 << " " << kses[i].id << endl;
+    }
+    tempid = intcorcheck(0, kses.size());
+    cout << "Нынешние данные ";
+    printks(kses[tempid - 1]);
+    cout << endl;
+    cout << "Что вы хотите отредактировать: " << endl;
+    cout << "1. Название " << endl;
+    cout << "2. Количество цехов " << endl;
+    cout << "3. Количество цехов в работе " << endl;
+    cout << "4. Эффективность " << endl;
+    cout << "5. Все " << endl;
+    tempaction = intcorcheck(1, 5);
+
+    if (tempaction == 1) {
+        cout << "Введите новое название" << endl;
+        cin >> kses[tempid - 1].name;
+    }
+    else if (tempaction == 2) {
+        cout << "Введите количество цехов" << endl;
+        kses[tempid - 1].sections = intcorcheck(0, INT_MAX);
+    }
+    else if (tempaction == 3) {
+        cout << "Введите количество цехов в работе" << endl;
+        while (1) {
+            kses[tempid - 1].wsections = intcorcheck(0, INT_MAX);
+            if (kses[tempid - 1].wsections > kses[tempid - 1].sections) {
+                cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    else if (tempaction == 4) {
+        cout << "Введите эффективность" << endl;
+        kses[tempid - 1].efficiency = doublecorcheck(0, 100);
+    }
+    else if (tempaction == 5) {
+        cout << "Введите новое название" << endl;
+        cin >> kses[tempid - 1].name;
+        cout << "Введите количество цехов" << endl;
+        kses[tempid - 1].sections = intcorcheck(0, INT_MAX);
+        cout << "Введите количество цехов в работе" << endl;
+        while (1) {
+            kses[tempid - 1].wsections = intcorcheck(0, INT_MAX);
+            if (kses[tempid - 1].wsections > kses[tempid - 1].sections) {
+                cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
+            }
+            else {
+                break;
+            }
+        }
+        cout << "Введите эффективность" << endl;
+        kses[tempid - 1].efficiency = doublecorcheck(0, 100);
+    }
+    else {
+        cout << "Некорректный ввод" << endl;
+    }
+}
+
+void changePipe(vector<Pipe>& pipes) {
+    int tempid;
+    int tempaction;
+    cout << "Выберите трубу которую хотите отредактировать" << endl;
+    for (int i = 0; i < pipes.size(); ++i) {
+        cout << i + 1 << " " << pipes[i].id << endl;
+    }
+    tempid = intcorcheck(1, pipes.size());
+    cout << "Нынешние данные ";
+    printpipe(pipes[tempid - 1]);
+    cout << endl;
+    cout << "Что вы хотите отредактировать: " << endl;
+    cout << "1. Длина " << endl;
+    cout << "2. Диаметр " << endl;
+    cout << "3. Состояние " << endl;
+    cout << "4. Все " << endl;
+    tempaction = intcorcheck(1, 4);
+    if (tempaction == 1) {
+        cout << "Введите новую длину" << endl;
+        pipes[tempid - 1].length = doublecorcheck(0, DBL_MAX);;
+    }
+    else if (tempaction == 2) {
+        cout << "Введите новый диаметр" << endl;
+        pipes[tempid - 1].caliber = intcorcheck(0, INT_MAX);
+    }
+    else if (tempaction == 3) {
+        cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
+        pipes[tempid - 1].overhaul = intcorcheck(0, 1);
+    }
+    else if (tempaction == 4) {
+        cout << "Введите новую длину" << endl;
+        pipes[tempid - 1].length = doublecorcheck(0, DBL_MAX);
+        cout << "Введите новый диаметр" << endl;
+        pipes[tempid - 1].caliber = intcorcheck(0, INT_MAX);
+        cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
+        pipes[tempid - 1].overhaul = intcorcheck(0, 1);
+    }
+    else {
+        cout << "Некорректный ввод" << endl;
+    }
+}
+
+int createPipe(int pipeid, vector<Pipe>& pipes) {
+    int tempid;
+    int templength;
+    int tempcaliber;
+    bool tempoverhaul;
+    tempid = pipeid;
+    pipeid++;
+    cout << "Введите длину трубы" << endl;
+    templength = doublecorcheck(0, DBL_MAX);
+    cout << "Введите диаметр трубы" << endl;
+    tempcaliber = intcorcheck(0, INT_MAX);
+    cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
+    tempoverhaul = intcorcheck(0, 1);
+    Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
+    pipes.push_back(newpipe);
+    return pipeid;
+}
+
+int createKS(int ksid, vector<KS>& kses) {
+    int tempid;
+    string tempname;
+    int tempsections;
+    int tempwsections;
+    int tempefficiency;
+    tempid = ksid;
+    ksid++;
+    cout << "Введите название КС" << endl;
+    cin >> tempname;
+    cout << "Введите количество цехов в КС" << endl;
+    tempsections = intcorcheck(0, INT_MAX);
+    cout << "Введите количнство работающих цехов в КС" << endl;
+    while (1) {
+        tempwsections = intcorcheck(0, INT_MAX);
+        if (tempwsections > tempsections) {
+            cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
+        }
+        else {
+            break;
+        }
+    }
+    cout << "Введите эффективность КС" << endl;
+    tempefficiency = doublecorcheck(0, 100);
+    KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
+    kses.push_back(newks);
+    return ksid;
+}
+
+void printall(vector<Pipe>& pipes, vector<KS>& kses) {
+    cout << "Трубы: " << endl;
+    for (int i = 0; i < pipes.size(); ++i) {
+        printpipe(pipes[i]);
+        cout << endl;
+    }
+    cout << "КС: " << endl;
+    for (int i = 0; i < kses.size(); ++i) {
+        printks(kses[i]);
+        cout << endl;
+    }
+}
+
 
 int main() {
     vector<Pipe> pipes;
-    vector<KS> kses; //plural from KS I guess
+    vector<KS> kses; 
     int action;
     int pipeid = 1;
     int ksid = 1;
@@ -134,237 +333,35 @@ int main() {
             break;
         }
         else if (action == 1) {
-            int tempid;
-            int templength;
-            int tempcaliber;
-            bool tempoverhaul;
-            tempid = pipeid;
-            pipeid++;
-            cout << "Введите длину трубы" << endl;
-            templength = doublecorcheck(0, DBL_MAX);
-            cout << "Введите диаметр трубы" << endl;
-            tempcaliber = intcorcheck(0, INT_MAX);
-            cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
-            tempoverhaul = intcorcheck(0, 1);
-            Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
-            pipes.push_back(newpipe);
+            pipeid = createPipe(pipeid, pipes);
         }
         else if (action == 2) {
-            int tempid;
-            string tempname;
-            int tempsections;
-            int tempwsections;
-            int tempefficiency;
-            tempid = ksid;
-            ksid++;
-            cout << "Введите название КС" << endl;
-            cin >> tempname;
-            cout << "Введите количество цехов в КС" << endl;
-            tempsections = intcorcheck(0, INT_MAX);
-            cout << "Введите количнство работающих цехов в КС" << endl;
-            while (1) {
-                tempwsections = intcorcheck(0, INT_MAX);
-                if (tempwsections > tempsections) {
-                    cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
-                } else {
-                    break;
-                }
-            }
-            cout << "Введите эффективность КС" << endl;
-            tempefficiency = doublecorcheck(0, 100);
-            KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
-            kses.push_back(newks);
+            ksid = createKS(ksid, kses);
         }
         else if (action == 3) {
-            cout << "Трубы: " << endl;
-            for (int i = 0; i < pipes.size(); ++i) {
-                printpipe(pipes[i]);
-                cout << endl;
-            }
-            cout << "КС: " << endl;
-            for (int i = 0; i < kses.size(); ++i) {
-                printks(kses[i]);
-                cout << endl;
-            }
+            printall(pipes, kses);
         }
         else if (action == 4) {
-            int tempid;
-            int tempaction;
             if (pipes.empty()) {
                 cout << "Нет активных труб" << endl;
                 continue;
             }
-            cout << "Выберите трубу которую хотите отредактировать" << endl;
-            for (int i = 0; i < pipes.size(); ++i) {
-                cout << i + 1 << " " << pipes[i].id << endl;
-            }
-            tempid = intcorcheck(1, pipes.size());
-            cout << "Нынешние данные ";
-            printpipe(pipes[tempid - 1]);
-            cout << endl;
-            cout << "Что вы хотите отредактировать: " << endl;
-            cout << "1. Длина " << endl;
-            cout << "2. Диаметр " << endl;
-            cout << "3. Состояние " << endl;
-            cout << "4. Все " << endl;
-            tempaction = intcorcheck(1, 4);
-            if (tempaction == 1) {
-                cout << "Введите новую длину" << endl;
-                pipes[tempid - 1].length = doublecorcheck(DBL_MIN, DBL_MAX);;
-            }
-            else if (tempaction == 2) {
-                cout << "Введите новый диаметр" << endl;
-                pipes[tempid - 1].caliber = intcorcheck(0, INT_MAX);
-            }
-            else if (tempaction == 3) {
-                cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
-                pipes[tempid - 1].overhaul = intcorcheck(0, 1);
-            }
-            else if (tempaction == 4) {
-                cout << "Введите новую длину" << endl;
-                pipes[tempid - 1].length = doublecorcheck(DBL_MIN, DBL_MAX);
-                cout << "Введите новый диаметр" << endl;
-                pipes[tempid - 1].caliber = intcorcheck(0, INT_MAX);
-                cout << "Труба сейчас в ремонте? (1:да; 0:нет)" << endl;
-                pipes[tempid - 1].overhaul = intcorcheck(0, 1);
-            }
-            else {
-                cout << "Некорректный ввод" << endl;
-            }
+            changePipe(pipes);
 
         }
         else if (action == 5) {
-            int tempid;
-            int tempaction;
             if (kses.empty()) {
                 cout << "Нет активных КС" << endl;
                 continue;
             }
-            cout << "Выберите КС который хотите отредактировать" << endl;
-            for (int i = 0; i < kses.size(); ++i) {//!!!!!!!!!!!!!!!!!!!!!
-                cout << i + 1 << " " << kses[i].id << endl;
-            }
-            tempid = intcorcheck(0, kses.size());
-            cout << "Нынешние данные ";
-            printks(kses[tempid - 1]);
-            cout << endl;
-            cout << "Что вы хотите отредактировать: " << endl;
-            cout << "1. Название " << endl;
-            cout << "2. Количество цехов " << endl;
-            cout << "3. Количество цехов в работе " << endl;
-            cout << "4. Эффективность " << endl;
-            cout << "5. Все " << endl;
-            tempaction = intcorcheck(1, 5);
-
-            if (tempaction == 1) {
-                cout << "Введите новое название" << endl;
-                cin >> kses[tempid - 1].name;
-            }
-            else if (tempaction == 2) {
-                cout << "Введите количество цехов" << endl;
-                kses[tempid - 1].sections = intcorcheck(0, INT_MAX);
-            }
-            else if (tempaction == 3) {
-                cout << "Введите количество цехов в работе" << endl;
-                while (1) {
-                    kses[tempid - 1].wsections = intcorcheck(0, INT_MAX);
-                    if (kses[tempid - 1].wsections > kses[tempid - 1].sections) {
-                        cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            else if (tempaction == 4) {
-                cout << "Введите эффективность" << endl;
-                kses[tempid - 1].efficiency = doublecorcheck(0, 100);
-            }
-            else if (tempaction == 5) {
-                cout << "Введите новое название" << endl;
-                cin >> kses[tempid - 1].name;
-                cout << "Введите количество цехов" << endl;
-                kses[tempid - 1].sections = intcorcheck(0, INT_MAX);
-                cout << "Введите количество цехов в работе" << endl;
-                while (1) {
-                    kses[tempid - 1].wsections = intcorcheck(0, INT_MAX);
-                    if (kses[tempid - 1].wsections > kses[tempid - 1].sections) {
-                        cout << "Количество работающих цехов не может быть больще общего количества цехов" << endl;
-                    }
-                    else {
-                        break;
-                    }
-                }
-                cout << "Введите эффективность" << endl;
-                kses[tempid - 1].efficiency = doublecorcheck(0, 100);
-            }
-            else {
-                cout << "Некорректный ввод" << endl;
-            }
+            changeKS(kses);
         }
         else if (action == 6) {
-            ofstream out("output");
-            out << pipes.size() << endl;
-            for (int i = 0; i < pipes.size(); ++i) {
-                out << pipes[i].id << endl;
-                out << pipes[i].length << endl;
-                out << pipes[i].caliber << endl;
-                if (pipes[i].overhaul == true) {
-                    out << 1 << endl;
-                }
-                else {
-                    out << 0 << endl;
-                }
-            }
-            out << kses.size() << endl;
-            for (int i = 0; i < kses.size(); ++i) {
-                out << kses[i].id << endl;
-                out << kses[i].name << endl;
-                out << kses[i].sections << endl;
-                out << kses[i].wsections << endl;
-                out << kses[i].efficiency << endl;
-            }
-            out.close();
+            save_to_file(pipes, kses);
         }
         else if (action == 7) {
-            ifstream input("output");
-            int counter;
-            string main;
-            int tempid;
-            int templength;
-            int tempcaliber;
-            bool tempoverhaul;
-            string tempname;
-            int tempsections;
-            int tempwsections;
-            int tempefficiency;
-            input >> counter;
-            for (int i = 0; i < counter; ++i) {
-                input >> tempid;
-                input >> templength;
-                input >> tempcaliber;
-                input >> tempoverhaul;
-                Pipe newpipe = { tempid, templength, tempcaliber, tempoverhaul };
-                pipes.push_back(newpipe);
-
-            }
-
-            input >> counter;
-
-            for (int i = 0; i < counter; ++i) {
-                input >> tempid;
-                getline(cin, main);
-                tempname = main;
-                input >> tempsections;
-                input >> tempwsections;
-                input >> tempefficiency;
-                KS newks = { tempid, tempname, tempsections, tempwsections, tempefficiency };
-                kses.push_back(newks);
-            }
-        } else {
-            cout << "Некорректный ввод" << endl;
-        }
-        
+            file_upload(pipes, kses);
+        } 
     }
 }
 
